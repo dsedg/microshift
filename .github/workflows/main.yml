@@ -1,0 +1,34 @@
+
+name: Trigger Microshift upstream build
+
+on:
+  workflow_dispatch:
+    inputs:
+      okd-version:
+        default: " 	4.17.0-okd-scos.1"
+        description: okd release from https://quay.io/repository/okd/scos-release?tab=tags
+        type: string
+      action:
+        type: choice
+        description: what to do?
+        default: run-in-bootc-container
+        options: 
+        - build-upstream-rpms
+        - run-in-bootc-container
+jobs:
+  build:
+    name: build microshift upstream
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out microshift repository
+        uses: actions/checkout@v3
+
+      - name: Add cwd to path for kubectl.
+        run: echo `pwd` >> $GITHUB_PATH
+
+      - name: rebase to okd
+        shell: bash
+        run: |
+          cd ${GITHUB_WORKSPACE}
+          sh ./scripts/auto-rebase/rebase-lvms.sh to "quay.io/lvms_dev/lvms4-lvms-operator-bundle:[TAG || DIGEST]"
+          sh ./scripts/auto-rebase/rebase.sh to quay.io/okd/scos-release:4.17.0-okd-scos.ec.4 quay.io/dsedg/okd-arm/okd-arm-release:4.17.0-0.okd-scos-2024-12-03-010653
