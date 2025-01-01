@@ -10,3 +10,9 @@ jobs:
     steps:
       - name: Check out microshift repository
         uses: actions/checkout@v3
+
+      - name: Build Container
+        shell: bash
+        run: |
+          sudo apt-get install podman -y
+          podman build  -f okd/src/microshift-okd-builder.Containerfile
