@@ -6,6 +6,6 @@ RUN dnf install -y yq gettext python3-pyyaml gcc git golang cockpit make jq seli
 
 WORKDIR /src/
 
-COPY okd/src/install_go.sh
+COPY okd/src/install_go.sh .
 
 RUN sh install_go.sh
