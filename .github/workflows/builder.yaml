@@ -1,0 +1,12 @@
+
+name: Build Fedora container
+
+on:
+  workflow_dispatch:
+jobs:
+  build:
+    name: build container
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out microshift repository
+        uses: actions/checkout@v3
