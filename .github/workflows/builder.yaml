@@ -17,11 +17,72 @@ jobs:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
         
-      - name: Buildah Action
+      - name: Install cosign
+        uses: sigstore/cosign-installer@59acb6260d9c0ba8f4a2f9d9b48431a222b68e20 #v3.5.0
+        with:
+          cosign-release: 'v2.2.4'
+          
+      - name: Docker Metadata
+        id: docker-metadata
+        uses: docker/metadata-action@v4
+        with:
+          images: |
+            ${{ env.IMAGE_NAME }}
+          tags: |
+            type=sha
+            type=ref,event=branch
+            type=ref,event=pr
+            type=schedule
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}},enable=${{ !startsWith(github.ref, 'refs/tags/v0.') }}
+
+      - name: Log into registry ${{ env.REGISTRY }}
+        uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d # v3.0.0
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Build Image
         uses: redhat-actions/buildah-build@v2
         with:
-          image: my-new-image
+          image: ${{ env.IMAGE_NAME }}
           tags: latest
           archs: amd64, arm64
+          oci: true
           containerfiles: ./okd/src/microshift-okd-builder.Containerfile
           context:  ./okd/src/
+          
+      - name: Echo Outputs
+        run: |
+          echo "Image: ${{ steps.build_image_multiplatform.outputs.image }}"
+          echo "Tags: ${{ steps.build_image_multiplatform.outputs.tags }}"
+          echo "Tagged Image: ${{ steps.build_image_multiplatform.outputs.image-with-tag }}"
+
+      - name: Check images created
+        run: buildah images | grep '${{ env.IMAGE_NAME }}'
+
+      - name: Check manifest
+        run: |
+          set -x
+          buildah manifest inspect ${{ steps.build_image_multiplatform.outputs.image }}:${{ env.IMAGE_TAG }}
+          
+      - name: Push To GHCR
+        uses: ./
+        id: push
+        with:
+          image: ${{ steps.build_image.outputs.image }}
+          tags: ${{ steps.build_image.outputs.tags }}
+          registry: ${{ env.REGISTRY }}
+          extra-args: |
+            --disable-content-trust
+
+      - name: Echo outputs
+        run: |
+          echo "${{ toJSON(steps.push.outputs) }}"
+
+      - name: Sign the published Docker images
+        run: echo "${TAGS}" | xargs -I {} cosign sign --yes {}@${tags}
+        with: 
+          tags: ${{ steps.build_image.outputs.tags }}
