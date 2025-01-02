@@ -3,6 +3,9 @@ name: Build Fedora container
 
 on:
   workflow_dispatch:
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: builder
 jobs:
   build:
     name: build container
@@ -11,8 +14,14 @@ jobs:
       - name: Check out microshift repository
         uses: actions/checkout@v3
 
-      - name: Build Container
+      - name: Build Container x86
         shell: bash
         run: |
           sudo apt-get install podman -y
           podman build  -f okd/src/microshift-okd-builder.Containerfile
+
+      - name: Build Container aarch64 
+        shell: bash
+        run: |
+          sudo apt-get install podman -y
+          podman build  --arch aarch64 -f okd/src/microshift-okd-builder.Containerfile
