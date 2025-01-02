@@ -12,16 +12,13 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Check out microshift repository
-        uses: actions/checkout@v3
-
-      - name: Build Container x86
-        shell: bash
-        run: |
-          sudo apt-get install podman -y
-          podman build  -f okd/src/microshift-okd-builder.Containerfile
-
-      - name: Build Container aarch64 
-        shell: bash
-        run: |
-          sudo apt-get install podman -y
-          podman build  --arch aarch64 -f okd/src/microshift-okd-builder.Containerfile
+        uses: actions/checkout@v4
+        
+      - name: Buildah Action
+        uses: redhat-actions/buildah-build@v2
+        with:
+          image: my-new-image
+          tags: latest
+          archs: amd64, arm64
+          containerfiles: ./okd/src/microshift-okd-builder.Containerfile
+          context:  ./okd/src/
