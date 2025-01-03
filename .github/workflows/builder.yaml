@@ -56,12 +56,12 @@ jobs:
           
       - name: Echo Outputs
         run: |
-          echo "Image: ${{ steps.build_image_multiplatform.outputs.image }}"
-          echo "Tags: ${{ steps.build_image_multiplatform.outputs.tags }}"
-          echo "Tagged Image: ${{ steps.build_image_multiplatform.outputs.image-with-tag }}"
+          echo "Image: ${{ steps.build_image.outputs.image }}"
+          echo "Tags: ${{ steps.build_image.outputs.tags }}"
+          echo "Tagged Image: ${{ steps.build_image.outputs.image-with-tag }}"
           
       - name: Push To GHCR
-        uses: ./
+        uses: redhat-actions/push-to-registry@v2
         id: push
         with:
           image: ${{ steps.build_image.outputs.image }}
