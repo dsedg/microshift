@@ -45,6 +45,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
           
       - name: Build Image
+        id: build_image
         uses: redhat-actions/buildah-build@v2
         with:
           image: ${{ env.IMAGE_NAME }}
