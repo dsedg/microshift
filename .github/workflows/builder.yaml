@@ -59,14 +59,6 @@ jobs:
           echo "Image: ${{ steps.build_image_multiplatform.outputs.image }}"
           echo "Tags: ${{ steps.build_image_multiplatform.outputs.tags }}"
           echo "Tagged Image: ${{ steps.build_image_multiplatform.outputs.image-with-tag }}"
-
-      - name: Check images created
-        run: buildah images | grep '${{ env.IMAGE_NAME }}'
-
-      - name: Check manifest
-        run: |
-          set -x
-          buildah manifest inspect ${{ steps.build_image_multiplatform.outputs.image }}:${{ env.IMAGE_TAG }}
           
       - name: Push To GHCR
         uses: ./
