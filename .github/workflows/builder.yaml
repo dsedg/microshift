@@ -82,7 +82,7 @@ jobs:
         run: |
           echo "${{ toJSON(steps.push.outputs) }}"
 
-      - name: Sign the published Docker images
-        run: echo "${TAGS}" | xargs -I {} cosign sign --yes {}@${tags}
-        with: 
-          tags: ${{ steps.build_image.outputs.tags }}
+      #- name: Sign the published Docker images
+      #  run: echo "${TAGS}" | xargs -I {} cosign sign --yes {}@${tags}
+       # with: 
+        #  tags: ${{ steps.build_image.outputs.tags }}
