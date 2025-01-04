@@ -1,0 +1,42 @@
+
+name: Rebased microshift containers
+
+on:
+  workflow_dispatch:
+    inputs:
+      okd-x86-repo:
+        default: "quay.io/okd/scos-release:4.17.0-okd-scos.1"
+        description: okd release from https://quay.io/repository/okd/scos-release?tab=tags
+        type: string
+      okd-arm-repo:
+        default: "quay.io/dsedg/okd-arm/okd-arm-release:4.17.0-0.okd-scos-2024-12-03-010653"
+        description: arm okd custom builds from https://quay.io/repository/dsedg/okd-arm/okd-arm-release
+        type: string
+      lvms4-operator:
+        default: "quay.io/lvms_dev/lvms4-lvms-operator-bundle:v4.17.0-43"
+        description: operator builds from https://quay.io/repository/lvms_dev/lvms4-lvms-operator-bundle?tab=tags
+        type: string
+jobs:
+  build:
+    name: build microshift upstream
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4${}
+  
+      - name: Rebase microshift containers
+        shell: bash
+        run: |
+          sudo apt-get install podman -y
+          # Need to added 'exit 0' because of some go issue when rebasing 
+          # So far the error does not seem to affect the build
+          podman run -v .:/src:Z  docker pull ghcr.io/dsedg/builder:latest  sh  -c "./scripts/auto-rebase/rebase.sh to ${okd-x86-repo} ${okd-arm-repo}; exit 0"
+      - name: Rebase lvms4 operator containers
+        shell: bash
+        run: |
+          podman run -v .:/src:Z  docker pull ghcr.io/dsedg/builder:latest  sh  -c "sh ./scripts/auto-rebase/rebase-lvms.sh to ${lvms4-operator}"
+      - name: Commit rebased branch 
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "{user.id}+{user.login}@users.noreply.github.com"
+          git push
