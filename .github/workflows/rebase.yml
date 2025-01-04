@@ -23,7 +23,10 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
-  
+      - name: setup git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "{user.id}+{user.login}@users.noreply.github.com"
       - name: Rebase microshift containers
         shell: bash
         run: |
@@ -37,6 +40,4 @@ jobs:
           podman run -v .:/src:Z  ghcr.io/dsedg/builder:latest  sh  -c "sh ./scripts/auto-rebase/rebase-lvms.sh to ${{ inputs.lvms4-operator }}"
       - name: Commit rebased branch 
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "{user.id}+{user.login}@users.noreply.github.com"
           git push
