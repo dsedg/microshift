@@ -4,7 +4,7 @@ name: Build Fedora container
 on:
   workflow_dispatch:
 env:
-  REGISTRY: ghcr.io
+  REGISTRY: ghcr.io/${{ github.repository_owner }}
   IMAGE_NAME: builder
 jobs:
   build:
@@ -49,7 +49,7 @@ jobs:
         uses: redhat-actions/buildah-build@v2
         with:
           image: ${{ env.IMAGE_NAME }}
-          tags: latest
+          tags: latest ${{ github.sha }}
           archs: amd64, arm64
           oci: true
           containerfiles: ./okd/src/microshift-okd-builder.Containerfile
