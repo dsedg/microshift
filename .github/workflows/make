@@ -1,0 +1,11 @@
+name: On rebased build RPMs and SRPMs
+
+on:
+  create:
+jobs:
+  build:
+    name: Make microshift rpms
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out microshift repository
+        uses: actions/checkout@v4
