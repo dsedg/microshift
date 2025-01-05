@@ -1,0 +1,38 @@
+name: On rebased build RPMs and SRPMs
+
+on:
+  create:
+jobs:
+  build:
+    name: Make microshift rpms
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out microshift repository
+        uses: actions/checkout@v4
+
+      - name: Install podman
+        shell: bash
+        run: |
+          sudo apt-get install podman -y
+
+      - name: Make x86 rpms
+        shell: bash
+        run: |
+          podman run -v .:/src:Z  ghcr.io/dsedg/builder:latest  sh  -c "make install; make rpms; make srpms; make clean"
+
+      - name: Make aarch64 rpms
+        shell: bash
+        run: |
+          podman run --arch aarch 64 -v .:/src:Z  ghcr.io/dsedg/builder:latest  sh  -c "make install; make rpms; make srpms; make clean"
+
+      - name: uploads RPMs
+        uses: actions/upload-artifact@v4
+        with:
+          name: RPMs
+          path: _output/rpmbuild/RPMS
+
+      - name: uploads SRPMs
+        uses: actions/upload-artifact@v4
+        with:
+          name: SRPMs
+          path: _output/rpmbuild/SRPMS
