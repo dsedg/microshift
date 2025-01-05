@@ -1,7 +1,10 @@
 name: On rebased build RPMs and SRPMs
 
 on:
-  create:
+  workflow_dispatch:
+  push:
+    branches:
+      - 'okd-**'
 jobs:
   build:
     name: Make microshift rpms
