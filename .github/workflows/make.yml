@@ -21,12 +21,12 @@ jobs:
       - name: Make x86 rpms
         shell: bash
         run: |
-          podman run -v .:/src:Z  ghcr.io/dsedg/builder:latest  sh  -c "make build; make rpms; make srpms; make clean"
+          podman run -v .:/src:Z  ghcr.io/dsedg/builder:latest sh -c "make build; make rpm; make srpm; make clean"
 
       - name: Make aarch64 rpms
         shell: bash
         run: |
-          podman run --arch aarch64 -v .:/src:Z  ghcr.io/dsedg/builder:latest  sh  -c "make build; make rpms; make srpms; make clean"
+          podman run --arch aarch64 -v .:/src:Z  ghcr.io/dsedg/builder:latest sh -c "make build; make rpm; make srpm; make clean"
 
       - name: uploads RPMs
         uses: actions/upload-artifact@v4
