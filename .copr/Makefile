@@ -1,0 +1,3 @@
+srpm:
+  cd ..
+  make srpm
