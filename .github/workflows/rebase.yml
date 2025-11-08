@@ -29,11 +29,11 @@ jobs:
           sudo apt-get install podman -y
           # Need to added 'exit 0' because of some go issue when rebasing 
           # So far the error does not seem to affect the build
-          podman run -v .:/src:Z  ghcr.io/dsedg/builder:latest  sh  -c "./scripts/auto-rebase/rebase.sh to ${{ intputs.okd-x86-repo }} ${{ inputs.okd-arm-repo }}"
+          podman run -v .:/src:Z  ghcr.io/dsedg/builder:latest  sh  -c "./scripts/auto-rebase/rebase.sh to quay.io/okd/scos-release:4.20.0-okd-scos.7 quay.io/okd/scos-release:4.20.0-okd-scos.7"
       - name: Rebase lvms4 operator containers
         shell: bash
         run: |
-          podman run -v .:/src:Z  ghcr.io/dsedg/builder:latest  sh  -c "sh ./scripts/auto-rebase/rebase-lvms.sh to ${{ inputs.lvms4-operator }}"
+          podman run -v .:/src:Z  ghcr.io/dsedg/builder:latest  sh  -c "sh ./scripts/auto-rebase/rebase-lvms.sh to quay.io/dsedg/lvms_dev/lvms-operator-bundle:4.20"
       - name: Commit rebased branch
         run: |
           git config user.name "github-actions[bot]"
