@@ -42,4 +42,4 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "{user.id}+{user.login}@users.noreply.github.com"
-          git push
+          git push -u origin HEAD:rebased-release-4.20
