@@ -12,7 +12,7 @@ on:
         description: arm okd custom builds from https://quay.io/repository/dsedg/okd-arm/okd-arm-release
         type: string
       lvms4-operator:
-        default: "quay.io/lvms_dev/lvms-operator-bundle:0c6cbd4ccf3cd11397b5efa7c260003a5f5beee8"
+        default: "quay.io/dsedg/lvms_dev/lvms-operator-bundle:4.20"
         description: operator builds from https://quay.io/repository/lvms_dev/lvms4-lvms-operator-bundle?tab=tags
         type: string
 jobs:
