@@ -26,14 +26,10 @@ jobs:
       - name: Rebase microshift containers
         shell: bash
         run: |
-          sudo apt-get install podman -y
           # Need to added 'exit 0' because of some go issue when rebasing 
           # So far the error does not seem to affect the build
           git config user.name "github-actions[bot]"
           git config user.email "{user.id}+{user.login}@users.noreply.github.com"
-          podman run -v .:/src:Z  ghcr.io/dsedg/builder:latest  sh  -c "./scripts/auto-rebase/rebase.sh to quay.io/okd/scos-release:4.20.0-okd-scos.7 quay.io/okd/scos-release:4.20.0-okd-scos.7;sh ./scripts/auto-rebase/rebase-lvms.sh to quay.io/dsedg/lvms_dev/lvms-operator-bundle:4.20"
-      - name: Commit rebased branch
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "{user.id}+{user.login}@users.noreply.github.com"
-          git push -u origin HEAD:rebased-release-4.20
+          sh ./scripts/auto-rebase/rebase.sh to quay.io/okd/scos-release:4.20.0-okd-scos.7 quay.io/okd/scos-release:4.20.0-okd-scos.7
+          sh ./scripts/auto-rebase/rebase-lvms.sh to quay.io/dsedg/lvms_dev/lvms-operator-bundle:4.20
+          git push
