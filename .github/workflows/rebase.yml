@@ -30,6 +30,6 @@ jobs:
           # So far the error does not seem to affect the build
           git config user.name "github-actions[bot]"
           git config user.email "{user.id}+{user.login}@users.noreply.github.com"
-          sh ./scripts/auto-rebase/rebase.sh to quay.io/okd/scos-release:4.20.0-okd-scos.7 quay.io/okd/scos-release:4.20.0-okd-scos.7
-          sh ./scripts/auto-rebase/rebase-lvms.sh to quay.io/dsedg/lvms_dev/lvms-operator-bundle:4.20
-          git push
+          git config user.email "{user.id}+{user.login}@users.noreply.github.com"
+          podman run -v .:/src:Z  ghcr.io/dsedg/builder:latest  sh  -c "./scripts/auto-rebase/rebase.sh to quay.io/okd/scos-release:4.20.0-okd-scos.7 quay.io/okd/scos-release:4.20.0-okd-scos.7;sh ./scripts/auto-rebase/rebase-lvms.sh to quay.io/dsedg/lvms_dev/lvms-operator-bundle:4.20"
+          git push 
