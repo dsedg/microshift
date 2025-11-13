@@ -1,2 +1,2 @@
 #!/bin/bash -x
-./scripts/auto-rebase/rebase-lvms.sh to "registry.redhat.io/lvms4/lvms-operator-bundle:v4.19.1"
+./scripts/auto-rebase/rebase-lvms.sh to "quay.io/dsedg/lvms_dev/lvms-operator-bundle:4.20"
