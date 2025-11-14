@@ -2,19 +2,6 @@ name: Rebased microshift containers
 
 on:
   workflow_dispatch:
-    inputs:
-      okd-x86-repo:
-        default: "quay.io/okd/scos-release:4.20.0-okd-scos.7"
-        description: okd release from https://quay.io/repository/okd/scos-release?tab=tags
-        type: string
-      okd-arm-repo:
-        default: "quay.io/okd/scos-release:4.20.0-okd-scos.7"
-        description: arm okd custom builds from https://quay.io/repository/dsedg/okd-arm/okd-arm-release
-        type: string
-      lvms4-operator:
-        default: "quay.io/dsedg/lvms_dev/lvms-operator-bundle:4.20"
-        description: operator builds from https://quay.io/repository/lvms_dev/lvms4-lvms-operator-bundle?tab=tags
-        type: string
 jobs:
   build:
     name: build microshift upstream
@@ -33,5 +20,5 @@ jobs:
           git config user.email "{user.id}+{user.login}@users.noreply.github.com"
           git config push.autoSetupRemote true
           echo "{}" > dummy.json
-          podman run -v .:/src:Z --mount type=bind,src=dummy.json,dst=/root/.pull-secret.json,Z ghcr.io/dsedg/builder:latest  sh  -c "./scripts/auto-rebase/rebase.sh to quay.io/okd/scos-release:4.20.0-okd-scos.7 quay.io/okd/scos-release:4.20.0-okd-scos.7;sh ./scripts/auto-rebase/rebase-lvms.sh to quay.io/dsedg/lvms_dev/lvms-operator-bundle:4.20"
+          podman run -v .:/src:Z --mount type=bind,src=dummy.json,dst=/root/.pull-secret.json,Z ghcr.io/dsedg/builder:latest  sh  -c "./scripts/auto-rebase/rebase.sh to quay.io/okd/scos-release:4.20.0-okd-scos.7 quay.io/okd/scos-release:4.20.0-okd-scos.7;sh ./scripts/auto-rebase/rebase-lvms.sh to quay.io/okderators/lvms/operator-bundle:4.20.0-2025-11-01-182956"
           git push 
