@@ -64,8 +64,8 @@ BuildRequires: systemd
 BuildRequires: golang
 # DO NOT REMOVE
 
-Requires: cri-o1.33, cri-o1.34
-Requires: cri-tools1.33, cri-tools1.34
+Requires: cri-o1.33 
+Requires: cri-tools1.33
 Requires: iptables
 Requires: microshift-selinux = %{version}
 Requires: microshift-networking = %{version}
