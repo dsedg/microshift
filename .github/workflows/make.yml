@@ -21,7 +21,7 @@ jobs:
       - name: Make x86 rpms
         shell: bash
         run: |
-          podman run -v .:/src:Z  ghcr.io/dsedg/builder:latest  sh  -c "make install rpm srpm"
+          podman run -v .:/src:Z  ghcr.io/dsedg/builder:latest  sh  -c "make all rpm srpm"
 
       - name: uploads RPMs
         uses: actions/upload-artifact@v4
